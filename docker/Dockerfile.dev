@@ -1,0 +1,22 @@
+# Development Dockerfile for vLLM
+# This image allows installing vLLM from a git repository at runtime
+# Build once, use with different branches via VLLM_REPO and VLLM_BRANCH env vars
+
+FROM vllm/vllm-openai:latest
+
+# Install build dependencies needed for compiling vLLM from source
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Uninstall the pre-installed vLLM (we'll install from your fork at runtime)
+RUN pip uninstall -y vllm
+
+# Copy the install script
+# Note: Build from repository root: docker build -f docker/Dockerfile.dev -t yourusername/vllm-dev-base .
+COPY docker/install-and-serve.sh /usr/local/bin/install-and-serve.sh
+RUN chmod +x /usr/local/bin/install-and-serve.sh
+
+ENTRYPOINT ["/usr/local/bin/install-and-serve.sh"]
+
