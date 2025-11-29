@@ -18,5 +18,6 @@ RUN pip uninstall -y vllm
 COPY docker/install-and-serve.sh /usr/local/bin/install-and-serve.sh
 RUN chmod +x /usr/local/bin/install-and-serve.sh
 
-ENTRYPOINT ["/usr/local/bin/install-and-serve.sh"]
+# Explicitly call bash to avoid exec format errors (common when building on macOS)
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/install-and-serve.sh"]
 
