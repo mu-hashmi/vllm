@@ -50,7 +50,7 @@ git fetch upstream main || echo "Warning: Could not fetch upstream main"
 # Install vLLM in editable mode using pre-compiled binaries from base image
 # This skips kernel compilation and makes install take seconds instead of 30+ minutes
 echo "Installing vLLM (using pre-compiled binaries)..."
-VLLM_USE_PRECOMPILED=1 pip install -e . --no-build-isolation
+VLLM_USE_PRECOMPILED=1 pip install -e ".[audio]" --no-build-isolation
 
 echo "=========================================="
 echo "vLLM installation complete!"
