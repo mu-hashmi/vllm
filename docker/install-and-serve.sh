@@ -31,8 +31,8 @@ if [ -d "vllm" ]; then
         echo "Warning: Branch ${VLLM_BRANCH} not found, using current branch"
     fi
 else
-    echo "Cloning vLLM repository..."
-    git clone --depth 1 --branch ${VLLM_BRANCH} ${VLLM_REPO} vllm || \
+    echo "Cloning vLLM repository (full history for precompiled wheel lookup)..."
+    git clone --branch ${VLLM_BRANCH} ${VLLM_REPO} vllm || \
         git clone ${VLLM_REPO} vllm
     cd vllm
     git checkout ${VLLM_BRANCH} || echo "Warning: Could not checkout ${VLLM_BRANCH}, using default branch"
@@ -41,6 +41,11 @@ fi
 # Show current commit
 echo "Current commit:"
 git log -1 --oneline
+
+# Fetch upstream vllm main branch so VLLM_USE_PRECOMPILED can find merge-base
+echo "Fetching upstream vllm main branch for precompiled wheel lookup..."
+git remote add upstream https://github.com/vllm-project/vllm.git 2>/dev/null || true
+git fetch upstream main || echo "Warning: Could not fetch upstream main"
 
 # Install vLLM in editable mode using pre-compiled binaries from base image
 # This skips kernel compilation and makes install take seconds instead of 30+ minutes
