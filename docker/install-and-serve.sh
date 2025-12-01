@@ -52,6 +52,10 @@ echo "vLLM installation complete!"
 echo "Starting vLLM server..."
 echo "=========================================="
 
+# Use FLASH_ATTN backend for better stability (avoids flashinfer version mismatch issues)
+export VLLM_ATTENTION_BACKEND=${VLLM_ATTENTION_BACKEND:-"FLASH_ATTN"}
+echo "Using attention backend: ${VLLM_ATTENTION_BACKEND}"
+
 # Run vLLM serve with all arguments passed to this script
 exec vllm serve "$@"
 
